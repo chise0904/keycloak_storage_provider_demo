@@ -13,6 +13,7 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.credential.PasswordCredentialModel;
+import org.keycloak.provider.Provider;
 import org.keycloak.storage.StorageId;
 import org.keycloak.storage.user.UserLookupProvider;
 import org.keycloak.storage.user.UserQueryProvider;
@@ -25,6 +26,7 @@ import java.util.stream.Stream;
  * Implements user lookup, search, and credential validation
  */
 public class ExternalUserStorageProvider implements
+        Provider,
         UserLookupProvider,
         UserQueryProvider,
         CredentialInputValidator {

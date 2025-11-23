@@ -5,6 +5,7 @@ import org.jboss.logging.Logger;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.component.ComponentValidationException;
 import org.keycloak.models.KeycloakSession;
+import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.RealmModel;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.provider.ProviderConfigurationBuilder;
@@ -14,7 +15,7 @@ import java.util.List;
 
 /**
  * External User Storage Provider Factory
- * Creates and configures provider instances
+ * Implements UserStorageProviderFactory for proper Keycloak 23.0 integration
  */
 public class ExternalUserStorageProviderFactory implements UserStorageProviderFactory<ExternalUserStorageProvider> {
 
@@ -44,7 +45,6 @@ public class ExternalUserStorageProviderFactory implements UserStorageProviderFa
     public ExternalUserStorageProvider create(KeycloakSession session, ComponentModel model) {
         logger.infof("Creating External User Storage Provider instance: %s", model.getName());
 
-        // Get configuration from environment variables or component config
         String dbHost = getConfigValue(model, CONFIG_KEY_DB_HOST,
                                       System.getenv("EXTERNAL_DB_HOST"), DEFAULT_DB_HOST);
         String dbPort = getConfigValue(model, CONFIG_KEY_DB_PORT,
@@ -62,7 +62,6 @@ public class ExternalUserStorageProviderFactory implements UserStorageProviderFa
             dbHost, dbPort, dbName, dbUser, dbPassword
         );
 
-        // Test connection
         if (!connectionManager.testConnection()) {
             logger.errorf("Failed to connect to external database: %s:%s/%s", dbHost, dbPort, dbName);
             throw new RuntimeException("Cannot connect to external user database");
@@ -95,7 +94,6 @@ public class ExternalUserStorageProviderFactory implements UserStorageProviderFa
             throw new ComponentValidationException("Database user is required");
         }
 
-        // Validate port number
         try {
             int port = Integer.parseInt(dbPort);
             if (port < 1 || port > 65535) {
@@ -105,7 +103,6 @@ public class ExternalUserStorageProviderFactory implements UserStorageProviderFa
             throw new ComponentValidationException("Port must be a valid number");
         }
 
-        // Test database connection
         try {
             DatabaseConnectionManager testConnectionManager = new DatabaseConnectionManager(
                 dbHost, dbPort, dbName, dbUser, dbPassword
@@ -169,12 +166,21 @@ public class ExternalUserStorageProviderFactory implements UserStorageProviderFa
         return "External User Storage Provider - Connects to external PostgreSQL database for user authentication";
     }
 
-    /**
-     * Helper method to get configuration value with fallback priority:
-     * 1. Component configuration
-     * 2. Environment variable
-     * 3. Default value
-     */
+    @Override
+    public void init(org.keycloak.Config.Scope config) {
+        logger.info("Initializing External User Storage Provider Factory");
+    }
+
+    @Override
+    public void postInit(KeycloakSessionFactory factory) {
+        logger.info("Post-initialization of External User Storage Provider Factory");
+    }
+
+    @Override
+    public void close() {
+        logger.info("Closing External User Storage Provider Factory");
+    }
+
     private String getConfigValue(ComponentModel config, String key, String envValue, String defaultValue) {
         String configValue = config.get(key);
         if (configValue != null && !configValue.isEmpty()) {
