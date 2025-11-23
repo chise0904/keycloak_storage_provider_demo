@@ -5,19 +5,19 @@ import org.jboss.logging.Logger;
 import org.keycloak.component.ComponentModel;
 import org.keycloak.component.ComponentValidationException;
 import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.KeycloakSessionFactory;
 import org.keycloak.models.RealmModel;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.provider.ProviderConfigurationBuilder;
-import org.keycloak.storage.UserStorageProviderFactory;
+import org.keycloak.component.ComponentFactory;
 
 import java.util.List;
 
 /**
  * External User Storage Provider Factory
- * Implements UserStorageProviderFactory for proper Keycloak 23.0 integration
+ * Implements ComponentFactory for Keycloak 23.0 compatibility
  */
-public class ExternalUserStorageProviderFactory implements UserStorageProviderFactory<ExternalUserStorageProvider> {
+public class ExternalUserStorageProviderFactory 
+    implements ComponentFactory<ExternalUserStorageProvider, ExternalUserStorageProvider> {
 
     private static final Logger logger = Logger.getLogger(ExternalUserStorageProviderFactory.class);
 
@@ -172,7 +172,7 @@ public class ExternalUserStorageProviderFactory implements UserStorageProviderFa
     }
 
     @Override
-    public void postInit(KeycloakSessionFactory factory) {
+    public void postInit(org.keycloak.models.KeycloakSessionFactory factory) {
         logger.info("Post-initialization of External User Storage Provider Factory");
     }
 

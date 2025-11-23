@@ -45,6 +45,7 @@ public class ExternalUserStorageProvider implements
         logger.infof("External User Storage Provider initialized for model: %s", model.getName());
     }
 
+    @Override
     public void close() {
         logger.debug("Closing External User Storage Provider");
     }
@@ -143,16 +144,10 @@ public class ExternalUserStorageProvider implements
         return Stream.empty();
     }
 
-    @Override
     public Stream<UserModel> getUsersStream(RealmModel realm, Integer firstResult, Integer maxResults) {
         logger.debugf("Getting all users (first=%d, max=%d)", firstResult, maxResults);
         return userRepository.getAllUsers(firstResult, maxResults).stream()
                 .map(user -> new ExternalUserAdapter(session, realm, model, user));
-    }
-
-    @Override
-    public Stream<UserModel> getUsersStream(RealmModel realm) {
-        return getUsersStream(realm, 0, Integer.MAX_VALUE);
     }
 
     // ===== CredentialInputValidator Implementation =====

@@ -2,6 +2,8 @@ package com.example.keycloak.storage.adapter;
 
 import com.example.keycloak.storage.model.ExternalUser;
 import org.keycloak.component.ComponentModel;
+import org.keycloak.credential.CredentialInput;
+import org.keycloak.credential.CredentialModel;
 import org.keycloak.models.*;
 import org.keycloak.storage.StorageId;
 
