@@ -14,13 +14,10 @@ import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.credential.PasswordCredentialModel;
 import org.keycloak.storage.StorageId;
-import org.keycloak.storage.UserStorageProvider;
 import org.keycloak.storage.user.UserLookupProvider;
 import org.keycloak.storage.user.UserQueryProvider;
 
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -28,15 +25,14 @@ import java.util.stream.Stream;
  * Implements user lookup, search, and credential validation
  */
 public class ExternalUserStorageProvider implements
-        UserStorageProvider,
         UserLookupProvider,
         UserQueryProvider,
         CredentialInputValidator {
 
     private static final Logger logger = Logger.getLogger(ExternalUserStorageProvider.class);
 
-    private final KeycloakSession session;
-    private final ComponentModel model;
+    protected final KeycloakSession session;
+    protected final ComponentModel model;
     private final UserRepository userRepository;
 
     public ExternalUserStorageProvider(KeycloakSession session, ComponentModel model,
@@ -47,7 +43,6 @@ public class ExternalUserStorageProvider implements
         logger.infof("External User Storage Provider initialized for model: %s", model.getName());
     }
 
-    @Override
     public void close() {
         logger.debug("Closing External User Storage Provider");
     }
@@ -103,8 +98,7 @@ public class ExternalUserStorageProvider implements
     @Override
     public Stream<UserModel> searchForUserStream(RealmModel realm, String search, Integer firstResult, Integer maxResults) {
         logger.debugf("Searching users with term: %s (first=%d, max=%d)", search, firstResult, maxResults);
-        List<ExternalUser> users = userRepository.searchUsers(search, firstResult, maxResults);
-        return users.stream()
+        return userRepository.searchUsers(search, firstResult, maxResults).stream()
                 .map(user -> new ExternalUserAdapter(session, realm, model, user));
     }
 
@@ -150,8 +144,7 @@ public class ExternalUserStorageProvider implements
     @Override
     public Stream<UserModel> getUsersStream(RealmModel realm, Integer firstResult, Integer maxResults) {
         logger.debugf("Getting all users (first=%d, max=%d)", firstResult, maxResults);
-        List<ExternalUser> users = userRepository.getAllUsers(firstResult, maxResults);
-        return users.stream()
+        return userRepository.getAllUsers(firstResult, maxResults).stream()
                 .map(user -> new ExternalUserAdapter(session, realm, model, user));
     }
 

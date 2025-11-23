@@ -20,13 +20,13 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
 -- Insert test users
 -- Password for all test users: "password123"
--- SHA-256 hash format: {SHA256}base64_encoded_hash
+-- SHA-256 hash: {SHA256}75K3eLr+dx6JJFuJ7LwIpEpOFmwGZZkRiB84PURz6U8=
 INSERT INTO users (username, email, first_name, last_name, password_hash, enabled) VALUES
-    ('testuser1', 'testuser1@example.com', 'Test', 'User One', '{SHA256}EF92b778bbb7948a2abe50ed8e4f59f1b7b91b3e3c8f7b3e9e6f1e0e0e0e0e0', true),
-    ('testuser2', 'testuser2@example.com', 'Test', 'User Two', '{SHA256}EF92b778bbb7948a2abe50ed8e4f59f1b7b91b3e3c8f7b3e9e6f1e0e0e0e0e0', true),
-    ('johndoe', 'john.doe@example.com', 'John', 'Doe', '{SHA256}EF92b778bbb7948a2abe50ed8e4f59f1b7b91b3e3c8f7b3e9e6f1e0e0e0e0e0', true),
-    ('janedoe', 'jane.doe@example.com', 'Jane', 'Doe', '{SHA256}EF92b778bbb7948a2abe50ed8e4f59f1b7b91b3e3c8f7b3e9e6f1e0e0e0e0e0', true),
-    ('admin', 'admin@example.com', 'Admin', 'User', '{SHA256}EF92b778bbb7948a2abe50ed8e4f59f1b7b91b3e3c8f7b3e9e6f1e0e0e0e0e0', true)
+    ('testuser1', 'testuser1@example.com', 'Test', 'User One', '{SHA256}75K3eLr+dx6JJFuJ7LwIpEpOFmwGZZkRiB84PURz6U8=', true),
+    ('testuser2', 'testuser2@example.com', 'Test', 'User Two', '{SHA256}75K3eLr+dx6JJFuJ7LwIpEpOFmwGZZkRiB84PURz6U8=', true),
+    ('johndoe', 'john.doe@example.com', 'John', 'Doe', '{SHA256}75K3eLr+dx6JJFuJ7LwIpEpOFmwGZZkRiB84PURz6U8=', true),
+    ('janedoe', 'jane.doe@example.com', 'Jane', 'Doe', '{SHA256}75K3eLr+dx6JJFuJ7LwIpEpOFmwGZZkRiB84PURz6U8=', true),
+    ('admin', 'admin@example.com', 'Admin', 'User', '{SHA256}75K3eLr+dx6JJFuJ7LwIpEpOFmwGZZkRiB84PURz6U8=', true)
 ON CONFLICT (username) DO NOTHING;
 
 -- Create function to automatically update updated_at timestamp
